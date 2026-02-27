@@ -5,7 +5,7 @@ import {
   Cell,
   Tooltip,
   Legend,
-  type TooltipProps,
+  type TooltipContentProps,
 } from 'recharts'
 
 interface PieDataItem {
@@ -18,7 +18,7 @@ interface StatsPieChartProps {
   data: PieDataItem[]
 }
 
-function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
+function CustomTooltip({ active, payload }: TooltipContentProps<number, string>) {
   if (!active || !payload?.length) return null
   const item = payload[0]
   return (

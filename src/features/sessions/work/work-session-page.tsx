@@ -230,7 +230,7 @@ export function WorkSessionPage() {
             <WorkSessionForm
               mode={formMode}
               initialDuration={sessionFormDuration}
-              initialData={editingSessionData}
+              initialData={editingSessionData ?? undefined}
               onSuccess={handleFormSuccess}
               onCancel={handleFormCancel}
             />

@@ -25,7 +25,7 @@ export async function createTrackingForRoutine(routine: StockRoutine): Promise<v
     routineQuantity: routine.quantity,
   }
 
-  const tracking = await trackingRecurringRepository.create(trackingData as TrackingCreateData)
+  const tracking = await trackingRecurringRepository.create(trackingData as unknown as Omit<TrackingRecurring, 'id' | 'createdAt' | 'updatedAt' | 'isDeleted' | 'deletedAt'>)
 
   // Lier la routine au suivi créé (pattern get+put via BaseRepository)
   await routineRepository.update(routine.id, { linkedTrackingId: tracking.id })

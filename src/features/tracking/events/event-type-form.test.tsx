@@ -33,8 +33,6 @@ vi.mock('@/hooks/use-undo', () => ({
   }),
 }))
 
-import React from 'react'
-
 const mockExistingType: EventType = {
   id: '22222222-2222-4222-8222-222222222222',
   userId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',

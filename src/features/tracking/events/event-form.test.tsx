@@ -102,7 +102,7 @@ beforeEach(() => {
   vi.clearAllMocks()
   vi.mocked(trackingEventRepository.create).mockResolvedValue(mockCreatedEvent)
   vi.mocked(trackingEventRepository.update).mockResolvedValue(mockCreatedEvent)
-  vi.mocked(eventTypeRepository.getAllSorted).mockReturnValue([])
+  vi.mocked(eventTypeRepository.getAllSorted).mockReturnValue(Promise.resolve([]))
   mockWithUndo.mockImplementation(
     async (_desc: string, action: () => Promise<void>, _undo?: () => Promise<void>) => {
       await action()

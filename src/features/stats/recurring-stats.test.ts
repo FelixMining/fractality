@@ -14,6 +14,7 @@ import {
 function makeRecurring(overrides: Partial<TrackingRecurring> = {}): TrackingRecurring {
   return {
     id: 'rec-1',
+    userId: 'test-user-id',
     name: 'Poids',
     responseType: 'number',
     unit: 'kg',
@@ -29,6 +30,7 @@ function makeRecurring(overrides: Partial<TrackingRecurring> = {}): TrackingRecu
 function makeResponse(overrides: Partial<TrackingResponse> = {}): TrackingResponse {
   return {
     id: crypto.randomUUID(),
+    userId: 'test-user-id',
     recurringId: 'rec-1',
     date: '2026-01-15',
     createdAt: '2026-01-15T10:00:00.000Z',

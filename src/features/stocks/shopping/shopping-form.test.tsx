@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ShoppingForm } from './shopping-form'
-import { purchaseRepository } from '@/lib/db/repositories/purchase.repository'
-import { stockRepository } from '@/lib/db/repositories/stock.repository'
 import type { StockProduct } from '@/schemas/stock-product.schema'
 
 // Mock des repositories

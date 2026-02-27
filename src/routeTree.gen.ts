@@ -33,6 +33,7 @@ import { Route as AuthStatsWorkRouteImport } from './routes/_auth/stats/work'
 import { Route as AuthStatsStocksRouteImport } from './routes/_auth/stats/stocks'
 import { Route as AuthStatsRecurringRouteImport } from './routes/_auth/stats/recurring'
 import { Route as AuthStatsJournalRouteImport } from './routes/_auth/stats/journal'
+import { Route as AuthStatsHabitsRouteImport } from './routes/_auth/stats/habits'
 import { Route as AuthStatsEventsRouteImport } from './routes/_auth/stats/events'
 import { Route as AuthStatsCardioRouteImport } from './routes/_auth/stats/cardio'
 import { Route as AuthSessionsWorkoutRouteImport } from './routes/_auth/sessions/workout'
@@ -164,6 +165,11 @@ const AuthStatsJournalRoute = AuthStatsJournalRouteImport.update({
   path: '/stats/journal',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthStatsHabitsRoute = AuthStatsHabitsRouteImport.update({
+  id: '/stats/habits',
+  path: '/stats/habits',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthStatsEventsRoute = AuthStatsEventsRouteImport.update({
   id: '/stats/events',
   path: '/stats/events',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/sessions/workout': typeof AuthSessionsWorkoutRouteWithChildren
   '/stats/cardio': typeof AuthStatsCardioRoute
   '/stats/events': typeof AuthStatsEventsRoute
+  '/stats/habits': typeof AuthStatsHabitsRoute
   '/stats/journal': typeof AuthStatsJournalRoute
   '/stats/recurring': typeof AuthStatsRecurringRoute
   '/stats/stocks': typeof AuthStatsStocksRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/sessions/workout': typeof AuthSessionsWorkoutRouteWithChildren
   '/stats/cardio': typeof AuthStatsCardioRoute
   '/stats/events': typeof AuthStatsEventsRoute
+  '/stats/habits': typeof AuthStatsHabitsRoute
   '/stats/journal': typeof AuthStatsJournalRoute
   '/stats/recurring': typeof AuthStatsRecurringRoute
   '/stats/stocks': typeof AuthStatsStocksRoute
@@ -308,6 +316,7 @@ export interface FileRoutesById {
   '/_auth/sessions/workout': typeof AuthSessionsWorkoutRouteWithChildren
   '/_auth/stats/cardio': typeof AuthStatsCardioRoute
   '/_auth/stats/events': typeof AuthStatsEventsRoute
+  '/_auth/stats/habits': typeof AuthStatsHabitsRoute
   '/_auth/stats/journal': typeof AuthStatsJournalRoute
   '/_auth/stats/recurring': typeof AuthStatsRecurringRoute
   '/_auth/stats/stocks': typeof AuthStatsStocksRoute
@@ -345,6 +354,7 @@ export interface FileRouteTypes {
     | '/sessions/workout'
     | '/stats/cardio'
     | '/stats/events'
+    | '/stats/habits'
     | '/stats/journal'
     | '/stats/recurring'
     | '/stats/stocks'
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/sessions/workout'
     | '/stats/cardio'
     | '/stats/events'
+    | '/stats/habits'
     | '/stats/journal'
     | '/stats/recurring'
     | '/stats/stocks'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/_auth/sessions/workout'
     | '/_auth/stats/cardio'
     | '/_auth/stats/events'
+    | '/_auth/stats/habits'
     | '/_auth/stats/journal'
     | '/_auth/stats/recurring'
     | '/_auth/stats/stocks'
@@ -612,6 +624,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthStatsJournalRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/stats/habits': {
+      id: '/_auth/stats/habits'
+      path: '/stats/habits'
+      fullPath: '/stats/habits'
+      preLoaderRoute: typeof AuthStatsHabitsRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/stats/events': {
       id: '/_auth/stats/events'
       path: '/stats/events'
@@ -778,6 +797,7 @@ interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
   AuthStatsCardioRoute: typeof AuthStatsCardioRoute
   AuthStatsEventsRoute: typeof AuthStatsEventsRoute
+  AuthStatsHabitsRoute: typeof AuthStatsHabitsRoute
   AuthStatsJournalRoute: typeof AuthStatsJournalRoute
   AuthStatsRecurringRoute: typeof AuthStatsRecurringRoute
   AuthStatsStocksRoute: typeof AuthStatsStocksRoute
@@ -798,6 +818,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
   AuthStatsCardioRoute: AuthStatsCardioRoute,
   AuthStatsEventsRoute: AuthStatsEventsRoute,
+  AuthStatsHabitsRoute: AuthStatsHabitsRoute,
   AuthStatsJournalRoute: AuthStatsJournalRoute,
   AuthStatsRecurringRoute: AuthStatsRecurringRoute,
   AuthStatsStocksRoute: AuthStatsStocksRoute,

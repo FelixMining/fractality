@@ -7,7 +7,7 @@ import {
   Tooltip,
   CartesianGrid,
   Legend,
-  type TooltipProps,
+  type TooltipContentProps,
 } from 'recharts'
 
 interface LineDef {
@@ -24,7 +24,7 @@ interface StatsLineChartProps {
   tickFormatter?: (value: string) => string
 }
 
-function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
+function CustomTooltip({ active, payload, label }: TooltipContentProps<number, string>) {
   if (!active || !payload?.length) return null
   return (
     <div
@@ -32,7 +32,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
       style={{ backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}
     >
       <p className="font-medium mb-1">{label}</p>
-      {payload.map((entry) => (
+      {payload.map((entry: { name: string; value: number; color: string }) => (
         <p key={entry.name} style={{ color: entry.color }}>
           {entry.name}: {entry.value}
         </p>

@@ -148,7 +148,7 @@ class TrackingResponseRepository extends BaseRepository<TrackingResponse> {
         recurringId,
         date,
         ...valueData,
-      } as Omit<TrackingResponse, keyof BaseEntity>)
+      } as unknown as Omit<TrackingResponse, 'id' | 'createdAt' | 'updatedAt' | 'isDeleted' | 'deletedAt'>)
     }
   }
 }

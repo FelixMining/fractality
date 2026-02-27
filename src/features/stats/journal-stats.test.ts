@@ -12,6 +12,7 @@ import {
 function makeEntry(overrides: Partial<JournalEntry> = {}): JournalEntry {
   return {
     id: crypto.randomUUID(),
+    userId: 'test-user-id',
     content: 'Entrée de test',
     entryDate: '2026-01-15T10:00',
     createdAt: '2026-01-15T10:00:00.000Z',

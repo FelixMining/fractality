@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft, Pencil, Trash2, Package } from 'lucide-react'
-import type { StockProduct, StockProductType } from '@/schemas/stock-product.schema'
+import type { StockProductType } from '@/schemas/stock-product.schema'
 
 const TYPE_LABELS: Record<StockProductType, string> = {
   liquid: 'Liquide',

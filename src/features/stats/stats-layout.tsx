@@ -16,7 +16,7 @@ const STAT_TABS: StatTab[] = [
   { to: '/stats/recurring', label: 'Suivis' },
   { to: '/stats/events', label: 'Événements' },
   { to: '/stats/journal', label: 'Journal' },
-  { to: '/stats/habits', label: 'Habitudes', disabled: true },
+  { to: '/stats/habits', label: 'Habitudes' },
 ]
 
 interface StatsLayoutProps {

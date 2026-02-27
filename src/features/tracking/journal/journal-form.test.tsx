@@ -37,8 +37,6 @@ vi.mock('@/lib/utils', async (importOriginal) => {
   }
 })
 
-import React from 'react'
-
 const mockCreatedEntry: JournalEntry = {
   id: '11111111-1111-4111-8111-111111111111',
   userId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',

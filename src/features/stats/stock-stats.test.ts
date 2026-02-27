@@ -17,6 +17,7 @@ import {
 function makePurchase(overrides: Partial<StockPurchase> = {}): StockPurchase {
   return {
     id: crypto.randomUUID(),
+    userId: 'test-user-id',
     productId: 'product-1',
     quantity: 1,
     price: 10,
@@ -31,6 +32,7 @@ function makePurchase(overrides: Partial<StockPurchase> = {}): StockPurchase {
 function makeProduct(overrides: Partial<StockProduct> = {}): StockProduct {
   return {
     id: 'product-1',
+    userId: 'test-user-id',
     name: 'Protéines Whey',
     productType: 'quantity',
     currentStock: 500,
@@ -44,6 +46,7 @@ function makeProduct(overrides: Partial<StockProduct> = {}): StockProduct {
 function makeRoutine(overrides: Partial<StockRoutine> = {}): StockRoutine {
   return {
     id: crypto.randomUUID(),
+    userId: 'test-user-id',
     name: 'Routine test',
     productId: 'product-1',
     quantity: 30,

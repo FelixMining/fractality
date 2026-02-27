@@ -13,6 +13,7 @@ import {
 function makeEvent(overrides: Partial<TrackingEvent> = {}): TrackingEvent {
   return {
     id: crypto.randomUUID(),
+    userId: 'test-user-id',
     title: 'Test Event',
     eventDate: '2026-01-15T10:00',
     priority: 'medium',
@@ -26,6 +27,7 @@ function makeEvent(overrides: Partial<TrackingEvent> = {}): TrackingEvent {
 function makeEventType(overrides: Partial<EventType> = {}): EventType {
   return {
     id: 'type-1',
+    userId: 'test-user-id',
     name: 'Santé',
     color: '#EF4444',
     icon: '🏥',

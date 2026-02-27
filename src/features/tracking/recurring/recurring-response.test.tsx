@@ -47,7 +47,6 @@ vi.mock('@/components/ui/slider', () => ({
   ),
 }))
 
-import React from 'react'
 import { toast } from 'sonner'
 
 // Helper pour créer un suivi de test

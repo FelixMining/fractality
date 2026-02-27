@@ -24,7 +24,6 @@ export function RecurringHistory({ recurring }: RecurringHistoryProps) {
   yesterdayDate.setDate(yesterdayDate.getDate() - 1)
 
   const sevenDaysAgo = toLocalDateString(sevenDaysAgoDate)
-  const yesterday = toLocalDateString(yesterdayDate)
 
   // Dates planifiées dans la période
   const scheduledDates = getScheduledDates(recurring, sevenDaysAgoDate, yesterdayDate)
