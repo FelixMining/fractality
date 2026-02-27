@@ -6,7 +6,7 @@ import { useOnlineStatus } from '@/hooks/use-online-status'
 function formatLastSync(ts: string | null): string {
   if (!ts) return 'Jamais synchronisé'
   const diff = Date.now() - new Date(ts).getTime()
-  if (diff < 60_000) return 'À l'instant'
+  if (diff < 60_000) return "À l'instant"
   if (diff < 3600_000) return `Il y a ${Math.floor(diff / 60_000)} min`
   if (diff < 86400_000) return `Il y a ${Math.floor(diff / 3600_000)} h`
   return `Il y a ${Math.floor(diff / 86400_000)} j`
