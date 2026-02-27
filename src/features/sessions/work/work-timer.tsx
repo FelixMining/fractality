@@ -5,13 +5,13 @@ import { Play, Pause, Square } from 'lucide-react'
 
 export const WORK_TIMER_STORAGE_KEY = 'fractality_active_work_timer'
 
-interface TimerState {
+export interface TimerState {
   activeStartedAt: number // Date.now() quand la période de run actuelle a démarré
   elapsedSecs: number     // secondes accumulées des périodes précédentes
   isPaused: boolean
 }
 
-function saveTimerState(state: TimerState) {
+export function saveTimerState(state: TimerState) {
   localStorage.setItem(WORK_TIMER_STORAGE_KEY, JSON.stringify(state))
 }
 

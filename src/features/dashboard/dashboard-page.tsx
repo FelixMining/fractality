@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db/database'
 import { EmptyState } from '@/components/shared/empty-state'
+import { ActiveSessionsBanner } from './active-sessions-banner'
 import { TodaySummary } from './today-summary'
 import { StockAlerts } from './stock-alerts'
 import { WeekStats } from './week-stats'
@@ -41,6 +42,7 @@ export function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 pb-24">
+      <ActiveSessionsBanner />
       <TodaySummary />
       <StockAlerts />
       <WeekStats />
