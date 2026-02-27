@@ -46,6 +46,7 @@ import { Route as AuthSessionsWorkoutProgramsIndexRouteImport } from './routes/_
 import { Route as AuthSessionsWorkoutProgramsProgramIdRouteImport } from './routes/_auth/sessions/workout/programs.$programId'
 import { Route as AuthSessionsWorkoutLiveSessionTemplateIdRouteImport } from './routes/_auth/sessions/workout/live.$sessionTemplateId'
 import { Route as AuthSessionsWorkoutSessionIdEditRouteImport } from './routes/_auth/sessions/workout/$sessionId.edit'
+import { Route as AuthSessionsWorkoutExercisesRouteImport } from './routes/_auth/sessions/workout/exercises'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -239,6 +240,12 @@ const AuthSessionsWorkoutSessionIdEditRoute =
     path: '/$sessionId/edit',
     getParentRoute: () => AuthSessionsWorkoutRoute,
   } as any)
+const AuthSessionsWorkoutExercisesRoute =
+  AuthSessionsWorkoutExercisesRouteImport.update({
+    id: '/exercises',
+    path: '/exercises',
+    getParentRoute: () => AuthSessionsWorkoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/sessions/workout/live/$sessionTemplateId': typeof AuthSessionsWorkoutLiveSessionTemplateIdRoute
   '/sessions/workout/programs/$programId': typeof AuthSessionsWorkoutProgramsProgramIdRoute
   '/sessions/workout/programs/': typeof AuthSessionsWorkoutProgramsIndexRoute
+  '/sessions/workout/exercises': typeof AuthSessionsWorkoutExercisesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -313,6 +321,7 @@ export interface FileRoutesByTo {
   '/sessions/workout/live/$sessionTemplateId': typeof AuthSessionsWorkoutLiveSessionTemplateIdRoute
   '/sessions/workout/programs/$programId': typeof AuthSessionsWorkoutProgramsProgramIdRoute
   '/sessions/workout/programs': typeof AuthSessionsWorkoutProgramsIndexRoute
+  '/sessions/workout/exercises': typeof AuthSessionsWorkoutExercisesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -353,6 +362,7 @@ export interface FileRoutesById {
   '/_auth/sessions/workout/live/$sessionTemplateId': typeof AuthSessionsWorkoutLiveSessionTemplateIdRoute
   '/_auth/sessions/workout/programs/$programId': typeof AuthSessionsWorkoutProgramsProgramIdRoute
   '/_auth/sessions/workout/programs/': typeof AuthSessionsWorkoutProgramsIndexRoute
+  '/_auth/sessions/workout/exercises': typeof AuthSessionsWorkoutExercisesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -393,6 +403,7 @@ export interface FileRouteTypes {
     | '/sessions/workout/live/$sessionTemplateId'
     | '/sessions/workout/programs/$programId'
     | '/sessions/workout/programs/'
+    | '/sessions/workout/exercises'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -429,6 +440,7 @@ export interface FileRouteTypes {
     | '/sessions/workout/live/$sessionTemplateId'
     | '/sessions/workout/programs/$programId'
     | '/sessions/workout/programs'
+    | '/sessions/workout/exercises'
   id:
     | '__root__'
     | '/_auth'
@@ -468,6 +480,7 @@ export interface FileRouteTypes {
     | '/_auth/sessions/workout/live/$sessionTemplateId'
     | '/_auth/sessions/workout/programs/$programId'
     | '/_auth/sessions/workout/programs/'
+    | '/_auth/sessions/workout/exercises'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -737,6 +750,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSessionsWorkoutSessionIdEditRouteImport
       parentRoute: typeof AuthSessionsWorkoutRoute
     }
+    '/_auth/sessions/workout/exercises': {
+      id: '/_auth/sessions/workout/exercises'
+      path: '/exercises'
+      fullPath: '/sessions/workout/exercises'
+      preLoaderRoute: typeof AuthSessionsWorkoutExercisesRouteImport
+      parentRoute: typeof AuthSessionsWorkoutRoute
+    }
   }
 }
 
@@ -764,6 +784,7 @@ interface AuthSessionsWorkoutRouteChildren {
   AuthSessionsWorkoutIndexRoute: typeof AuthSessionsWorkoutIndexRoute
   AuthSessionsWorkoutSessionIdEditRoute: typeof AuthSessionsWorkoutSessionIdEditRoute
   AuthSessionsWorkoutLiveSessionTemplateIdRoute: typeof AuthSessionsWorkoutLiveSessionTemplateIdRoute
+  AuthSessionsWorkoutExercisesRoute: typeof AuthSessionsWorkoutExercisesRoute
 }
 
 const AuthSessionsWorkoutRouteChildren: AuthSessionsWorkoutRouteChildren = {
@@ -774,6 +795,7 @@ const AuthSessionsWorkoutRouteChildren: AuthSessionsWorkoutRouteChildren = {
   AuthSessionsWorkoutSessionIdEditRoute: AuthSessionsWorkoutSessionIdEditRoute,
   AuthSessionsWorkoutLiveSessionTemplateIdRoute:
     AuthSessionsWorkoutLiveSessionTemplateIdRoute,
+  AuthSessionsWorkoutExercisesRoute: AuthSessionsWorkoutExercisesRoute,
 }
 
 const AuthSessionsWorkoutRouteWithChildren =
