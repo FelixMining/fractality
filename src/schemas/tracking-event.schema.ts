@@ -12,6 +12,8 @@ export const trackingEventSchema = baseEntitySchema.extend({
   priority: eventPriorityEnum.default('medium'),
   description: z.string().optional(),
   location: z.string().optional(),
+  locationLat: z.number().optional(),
+  locationLng: z.number().optional(),
   // IDs vers entrées dans la table mediaBlobs (hors scope UI pour cette story)
   imageIds: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),

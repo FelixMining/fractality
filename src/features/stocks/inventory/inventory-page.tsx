@@ -4,18 +4,13 @@ import type { InventoryFilters } from './product-list'
 import { ProductForm } from './product-form'
 import { ProductDetail } from './product-detail'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { FormModal } from '@/components/shared/form-modal'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { FilterBar } from '@/components/shared/filter-bar'
 import { Label } from '@/components/ui/label'
 import { useUndo } from '@/hooks/use-undo'
 import { stockRepository } from '@/lib/db/repositories/stock.repository'
+import { consumeCreate } from '@/lib/create-signal'
 import type { StockProductType } from '@/schemas/stock-product.schema'
 import { Plus } from 'lucide-react'
 
@@ -41,6 +36,12 @@ export function InventoryPage() {
   const [filters, setFilters] = useState<InventoryFilters>(EMPTY_INVENTORY_FILTERS)
 
   const { withUndo } = useUndo()
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleCreateNew()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleCreateNew = () => {
     setEditingProductId(null)
@@ -170,28 +171,18 @@ export function InventoryPage() {
         />
       )}
 
-      {/* Form Sheet */}
-      <Sheet open={formOpen} onOpenChange={(open) => !open && handleFormCancel()}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editingProductId ? 'Modifier le produit' : 'Nouveau produit'}
-            </SheetTitle>
-            <SheetDescription>
-              {editingProductId
-                ? 'Modifiez les informations de ce produit.'
-                : 'Définissez un nouveau produit à suivre dans votre inventaire.'}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6">
-            <ProductFormContainer
-              productId={editingProductId}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire produit — plein écran */}
+      <FormModal
+        open={formOpen}
+        onClose={handleFormCancel}
+        title={editingProductId ? 'Modifier le produit' : 'Nouveau produit'}
+      >
+        <ProductFormContainer
+          productId={editingProductId}
+          onSuccess={handleFormSuccess}
+          onCancel={handleFormCancel}
+        />
+      </FormModal>
 
       {/* Delete Confirmation */}
       <ConfirmDialog

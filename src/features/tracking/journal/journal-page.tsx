@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { useEffect, useState } from 'react'
+import { FormModal } from '@/components/shared/form-modal'
 import { JournalList, countJournalFilters } from './journal-list'
 import type { JournalFilters } from './journal-list'
 import { JournalForm } from './journal-form'
@@ -8,6 +8,7 @@ import { FilterBar } from '@/components/shared/filter-bar'
 import { ProjectPicker } from '@/components/shared/project-picker'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { consumeCreate } from '@/lib/create-signal'
 import type { JournalEntry } from '@/schemas/journal-entry.schema'
 
 const EMPTY_JOURNAL_FILTERS: JournalFilters = {
@@ -21,6 +22,12 @@ export function JournalPage() {
   const [showDetail, setShowDetail] = useState(false)
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
   const [filters, setFilters] = useState<JournalFilters>(EMPTY_JOURNAL_FILTERS)
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleAdd()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAdd = () => {
     setSelectedEntry(null)
@@ -82,41 +89,25 @@ export function JournalPage() {
       </div>
       <JournalList filters={filters} onAdd={handleAdd} onSelect={handleSelect} />
 
-      {/* Sheet formulaire création/édition */}
-      <Sheet open={showForm} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              {selectedEntry ? "Modifier l'entrée" : 'Nouvelle entrée'}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto pb-6">
-            <JournalForm
-              initialData={selectedEntry ?? undefined}
-              onSuccess={handleClose}
-              onCancel={handleClose}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire création/édition — plein écran */}
+      <FormModal
+        open={showForm}
+        onClose={handleClose}
+        title={selectedEntry ? "Modifier l'entrée" : 'Nouvelle entrée'}
+      >
+        <JournalForm
+          initialData={selectedEntry ?? undefined}
+          onSuccess={handleClose}
+          onCancel={handleClose}
+        />
+      </FormModal>
 
-      {/* Sheet détail */}
-      <Sheet open={showDetail} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Entrée journal</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto pb-6">
-            {selectedEntry && (
-              <JournalDetail
-                entry={selectedEntry}
-                onEdit={handleEdit}
-                onDeleted={handleClose}
-              />
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Détail entrée — plein écran */}
+      <FormModal open={showDetail} onClose={handleClose} title="Entrée journal">
+        {selectedEntry && (
+          <JournalDetail entry={selectedEntry} onEdit={handleEdit} onDeleted={handleClose} />
+        )}
+      </FormModal>
     </>
   )
 }

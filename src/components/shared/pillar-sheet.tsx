@@ -8,6 +8,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { pillars, type Pillar } from '@/lib/navigation'
+import { signalCreate } from '@/lib/create-signal'
 
 interface PillarSheetProps {
   open: boolean
@@ -25,7 +26,8 @@ export function PillarSheet({ open, onOpenChange }: PillarSheetProps) {
     onOpenChange(isOpen)
   }
 
-  const handleSubTypeClick = (to: string) => {
+  const handleSubTypeClick = (to: string, openCreate?: boolean) => {
+    if (openCreate) signalCreate()
     void navigate({ to: to as '/' })
     handleClose(false)
   }
@@ -84,7 +86,7 @@ export function PillarSheet({ open, onOpenChange }: PillarSheetProps) {
               return (
                 <button
                   key={sub.to}
-                  onClick={() => handleSubTypeClick(sub.to)}
+                  onClick={() => handleSubTypeClick(sub.to, sub.openCreate)}
                   className="flex min-h-[48px] items-center gap-3 rounded-xl px-4 py-2.5 text-left transition-colors hover:bg-bg-tertiary"
                 >
                   <SubIcon

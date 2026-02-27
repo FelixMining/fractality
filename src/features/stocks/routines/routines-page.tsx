@@ -1,18 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RoutineList } from './routine-list'
 import { RoutineForm } from './routine-form'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { FormModal } from '@/components/shared/form-modal'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { useUndo } from '@/hooks/use-undo'
 import { routineRepository } from '@/lib/db/repositories/routine.repository'
 import { deleteTrackingForRoutine } from '@/lib/services/routine-tracking.service'
+import { consumeCreate } from '@/lib/create-signal'
 import { Plus } from 'lucide-react'
 import type { StockRoutine } from '@/schemas/stock-routine.schema'
 
@@ -23,6 +18,12 @@ export function RoutinesPage() {
   const [deletingRoutine, setDeletingRoutine] = useState<StockRoutine | null>(null)
 
   const { withUndo } = useUndo()
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleAdd()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAdd = () => {
     setEditingRoutine(null)
@@ -98,28 +99,18 @@ export function RoutinesPage() {
         onDelete={handleDeleteRequest}
       />
 
-      {/* Formulaire Sheet */}
-      <Sheet open={formOpen} onOpenChange={(open) => !open && handleFormCancel()}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editingRoutine ? 'Modifier la routine' : 'Nouvelle routine'}
-            </SheetTitle>
-            <SheetDescription>
-              {editingRoutine
-                ? 'Modifiez les informations de cette routine de consommation.'
-                : 'Créez une routine pour suivre la consommation régulière d\'un produit.'}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6">
-            <RoutineForm
-              initialData={editingRoutine ?? undefined}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire routine — plein écran */}
+      <FormModal
+        open={formOpen}
+        onClose={handleFormCancel}
+        title={editingRoutine ? 'Modifier la routine' : 'Nouvelle routine'}
+      >
+        <RoutineForm
+          initialData={editingRoutine ?? undefined}
+          onSuccess={handleFormSuccess}
+          onCancel={handleFormCancel}
+        />
+      </FormModal>
 
       {/* Dialog de confirmation de suppression */}
       <ConfirmDialog

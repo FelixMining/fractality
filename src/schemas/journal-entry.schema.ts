@@ -14,6 +14,11 @@ export const journalEntrySchema = baseEntitySchema.extend({
   motivation: z.number().int().min(1).max(10).optional(),
   energy: z.number().int().min(1).max(10).optional(),
 
+  // Localisation optionnelle (adresse texte + coordonnées GPS brutes)
+  location: z.string().optional(),
+  locationLat: z.number().optional(),
+  locationLng: z.number().optional(),
+
   // Tags libres
   tags: z.array(z.string()).optional(),
 

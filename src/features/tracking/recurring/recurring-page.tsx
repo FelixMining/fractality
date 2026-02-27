@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { useEffect, useState } from 'react'
 import { RecurringList, countRecurringFilters } from './recurring-list'
 import type { RecurringFilters } from './recurring-list'
 import { RecurringForm } from './recurring-form'
 import { RecurringHistory } from './recurring-history'
 import { FilterBar } from '@/components/shared/filter-bar'
+import { FormModal } from '@/components/shared/form-modal'
 import { Label } from '@/components/ui/label'
+import { consumeCreate } from '@/lib/create-signal'
 import type { TrackingRecurring, TrackingRecurrenceType } from '@/schemas/tracking-recurring.schema'
 
 const RECURRENCE_TYPE_LABELS: Record<TrackingRecurrenceType, string> = {
@@ -23,6 +24,12 @@ export function RecurringPage() {
   const [showHistory, setShowHistory] = useState(false)
   const [selectedRecurring, setSelectedRecurring] = useState<TrackingRecurring | null>(null)
   const [filters, setFilters] = useState<RecurringFilters>(EMPTY_RECURRING_FILTERS)
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleAdd()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAdd = () => {
     setSelectedRecurring(null)
@@ -85,39 +92,27 @@ export function RecurringPage() {
         onShowHistory={handleShowHistory}
       />
 
-      {/* Sheet formulaire création/édition */}
-      <Sheet open={showForm} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              {selectedRecurring ? 'Modifier le suivi' : 'Créer un suivi'}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto">
-            <RecurringForm
-              initialData={selectedRecurring ?? undefined}
-              onSuccess={handleClose}
-              onCancel={handleClose}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire création/édition — plein écran */}
+      <FormModal
+        open={showForm}
+        onClose={handleClose}
+        title={selectedRecurring ? 'Modifier le suivi' : 'Créer un suivi'}
+      >
+        <RecurringForm
+          initialData={selectedRecurring ?? undefined}
+          onSuccess={handleClose}
+          onCancel={handleClose}
+        />
+      </FormModal>
 
-      {/* Sheet historique — saisie rétroactive (AC5) */}
-      <Sheet open={showHistory} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              Historique — {selectedRecurring?.name}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto">
-            {selectedRecurring && (
-              <RecurringHistory recurring={selectedRecurring} />
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Historique — saisie rétroactive */}
+      <FormModal
+        open={showHistory}
+        onClose={handleClose}
+        title={`Historique — ${selectedRecurring?.name ?? ''}`}
+      >
+        {selectedRecurring && <RecurringHistory recurring={selectedRecurring} />}
+      </FormModal>
     </>
   )
 }

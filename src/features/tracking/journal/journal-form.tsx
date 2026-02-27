@@ -8,6 +8,7 @@ import { formatLocalDatetime } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { LocationField } from '@/components/shared/location-field'
 import { toast } from 'sonner'
 import type { JournalEntry } from '@/schemas/journal-entry.schema'
 
@@ -20,6 +21,9 @@ const journalFormSchema = z.object({
   motivation: z.number().int().min(1).max(10).optional(),
   energy: z.number().int().min(1).max(10).optional(),
   tags: z.array(z.string()).optional(),
+  location: z.string().optional(),
+  locationLat: z.number().optional(),
+  locationLng: z.number().optional(),
 })
 
 type JournalFormValues = z.infer<typeof journalFormSchema>
@@ -118,6 +122,9 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
           motivation: initialData.motivation,
           energy: initialData.energy,
           tags: initialData.tags ?? [],
+          location: initialData.location ?? '',
+          locationLat: initialData.locationLat,
+          locationLng: initialData.locationLng,
         }
       : {
           entryDate: formatLocalDatetime(new Date()),
@@ -126,6 +133,9 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
           motivation: undefined,
           energy: undefined,
           tags: [],
+          location: '',
+          locationLat: undefined,
+          locationLng: undefined,
         },
   })
 
@@ -133,6 +143,9 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
   const watchedMood = watch('mood') ?? 5
   const watchedMotivation = watch('motivation') ?? 5
   const watchedEnergy = watch('energy') ?? 5
+  const watchedLocation = watch('location') ?? ''
+  const watchedLat = watch('locationLat')
+  const watchedLng = watch('locationLng')
 
   // Suggestions filtrées
   const suggestions = tagInput.length > 0 && showSuggestions
@@ -179,6 +192,9 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
         motivation: motivationActive ? data.motivation : undefined,
         energy: energyActive ? data.energy : undefined,
         tags: data.tags && data.tags.length > 0 ? data.tags : undefined,
+        location: data.location || undefined,
+        locationLat: data.locationLat,
+        locationLng: data.locationLng,
       }
 
       if (isEditing && initialData) {
@@ -196,6 +212,9 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
               motivation: old.motivation,
               energy: old.energy,
               tags: old.tags,
+              location: old.location,
+              locationLat: old.locationLat,
+              locationLng: old.locationLng,
             })
           },
         )
@@ -256,6 +275,22 @@ export function JournalForm({ initialData, onSuccess, onCancel }: JournalFormPro
             {errors.content.message}
           </p>
         )}
+      </div>
+
+      {/* Localisation avec GPS */}
+      <div className="space-y-2">
+        <Label htmlFor="journal-location">Lieu (optionnel)</Label>
+        <LocationField
+          id="journal-location"
+          address={watchedLocation}
+          onAddressChange={(v) => setValue('location', v)}
+          lat={watchedLat}
+          lng={watchedLng}
+          onCoordsChange={(lat, lng) => {
+            setValue('locationLat', lat)
+            setValue('locationLng', lng)
+          }}
+        />
       </div>
 
       {/* Propriétés chiffrées */}

@@ -1,15 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ShoppingList } from './shopping-list'
 import { ShoppingForm } from './shopping-form'
 import { ShoppingDetail } from './shopping-detail'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { FormModal } from '@/components/shared/form-modal'
 import { Button } from '@/components/ui/button'
+import { consumeCreate } from '@/lib/create-signal'
 import { Plus } from 'lucide-react'
 
 type ViewMode = 'list' | 'detail'
@@ -18,6 +13,11 @@ export function ShoppingPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null)
   const [formOpen, setFormOpen] = useState(false)
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) setFormOpen(true)
+  }, [])
 
   const handleSelectGroup = (dateKey: string) => {
     setSelectedDateKey(dateKey)
@@ -66,23 +66,10 @@ export function ShoppingPage() {
         />
       )}
 
-      {/* Form Sheet */}
-      <Sheet open={formOpen} onOpenChange={(open) => !open && setFormOpen(false)}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>Nouvelle course</SheetTitle>
-            <SheetDescription>
-              Sélectionnez les produits achetés et leurs quantités. Le stock sera mis à jour automatiquement.
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6">
-            <ShoppingForm
-              onSuccess={handleFormSuccess}
-              onCancel={() => setFormOpen(false)}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire course — plein écran */}
+      <FormModal open={formOpen} onClose={() => setFormOpen(false)} title="Nouvelle course">
+        <ShoppingForm onSuccess={handleFormSuccess} onCancel={() => setFormOpen(false)} />
+      </FormModal>
     </div>
   )
 }

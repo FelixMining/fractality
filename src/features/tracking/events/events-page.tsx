@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { FormModal } from '@/components/shared/form-modal'
 import { EventList } from './event-list'
 import { EventTimeline } from './event-timeline'
 import { EventForm } from './event-form'
@@ -9,6 +9,7 @@ import { EventTypeManager } from './event-type-list'
 import { EventFilterBar } from './event-filter-bar'
 import type { EventFilters } from './event-filter-bar'
 import type { TrackingEvent } from '@/schemas/tracking-event.schema'
+import { consumeCreate } from '@/lib/create-signal'
 
 type ViewMode = 'list' | 'timeline'
 
@@ -27,6 +28,12 @@ export function EventsPage() {
   const [showDetail, setShowDetail] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<TrackingEvent | null>(null)
   const [filters, setFilters] = useState<EventFilters>(EMPTY_FILTERS)
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleAdd()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAdd = () => {
     setSelectedEvent(null)
@@ -95,53 +102,34 @@ export function EventsPage() {
         )}
       </div>
 
-      {/* Sheet — Formulaire événement */}
-      <Sheet open={showEventForm} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              {selectedEvent ? "Modifier l'événement" : 'Nouvel événement'}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto">
-            <EventForm
-              initialData={selectedEvent ?? undefined}
-              onSuccess={handleClose}
-              onCancel={handleClose}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire événement — plein écran */}
+      <FormModal
+        open={showEventForm}
+        onClose={handleClose}
+        title={selectedEvent ? "Modifier l'événement" : 'Nouvel événement'}
+      >
+        <EventForm
+          initialData={selectedEvent ?? undefined}
+          onSuccess={handleClose}
+          onCancel={handleClose}
+        />
+      </FormModal>
 
-      {/* Sheet — Détail événement */}
-      <Sheet open={showDetail} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Détail de l'événement</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto">
-            {selectedEvent && (
-              <EventDetail
-                event={selectedEvent}
-                onEdit={handleEdit}
-                onDeleted={handleClose}
-              />
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Détail événement — plein écran */}
+      <FormModal open={showDetail} onClose={handleClose} title="Détail de l'événement">
+        {selectedEvent && (
+          <EventDetail event={selectedEvent} onEdit={handleEdit} onDeleted={handleClose} />
+        )}
+      </FormModal>
 
-      {/* Sheet — Gestionnaire de types */}
-      <Sheet open={showTypeManager} onOpenChange={setShowTypeManager}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Types d'événements</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 overflow-y-auto">
-            <EventTypeManager />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Gestionnaire de types — plein écran */}
+      <FormModal
+        open={showTypeManager}
+        onClose={() => setShowTypeManager(false)}
+        title="Types d'événements"
+      >
+        <EventTypeManager />
+      </FormModal>
     </>
   )
 }

@@ -29,6 +29,8 @@ export interface SubType {
   to: string
   label: string
   icon: LucideIcon
+  /** Si true, ouvre directement le formulaire de création au montage de la page cible */
+  openCreate?: boolean
 }
 
 export interface Pillar {
@@ -53,9 +55,9 @@ export const pillars: Pillar[] = [
     icon: Dumbbell,
     color: 'sessions',
     subTypes: [
-      { to: '/sessions/work', label: 'Travail', icon: Timer },
-      { to: '/sessions/workout', label: 'Musculation', icon: Dumbbell },
-      { to: '/sessions/cardio', label: 'Cardio', icon: Activity },
+      { to: '/sessions/work', label: 'Travail', icon: Timer, openCreate: true },
+      { to: '/sessions/workout', label: 'Musculation', icon: Dumbbell, openCreate: true },
+      { to: '/sessions/cardio', label: 'Cardio', icon: Activity, openCreate: true },
     ],
   },
   {
@@ -64,9 +66,9 @@ export const pillars: Pillar[] = [
     icon: Package,
     color: 'stocks',
     subTypes: [
-      { to: '/stocks/inventory', label: 'Inventaire', icon: Box },
-      { to: '/stocks/shopping', label: 'Courses', icon: ShoppingCart },
-      { to: '/stocks/routines', label: 'Routines', icon: RotateCcw },
+      { to: '/stocks/inventory', label: 'Inventaire', icon: Box, openCreate: true },
+      { to: '/stocks/shopping', label: 'Courses', icon: ShoppingCart, openCreate: true },
+      { to: '/stocks/routines', label: 'Routines', icon: RotateCcw, openCreate: true },
     ],
   },
   {
@@ -75,9 +77,9 @@ export const pillars: Pillar[] = [
     icon: BarChart3,
     color: 'tracking',
     subTypes: [
-      { to: '/tracking/recurring', label: 'Suivi', icon: Target },
-      { to: '/tracking/events', label: 'Événements', icon: Calendar },
-      { to: '/tracking/journal', label: 'Journal', icon: BookOpen },
+      { to: '/tracking/recurring', label: 'Suivi', icon: Target, openCreate: true },
+      { to: '/tracking/events', label: 'Événements', icon: Calendar, openCreate: true },
+      { to: '/tracking/journal', label: 'Journal', icon: BookOpen, openCreate: true },
     ],
   },
 ]

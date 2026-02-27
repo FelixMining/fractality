@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { MapPin, Loader2 } from 'lucide-react'
 import { trackingEventRepository } from '@/lib/db/repositories/event.repository'
 import { eventTypeRepository } from '@/lib/db/repositories/event.repository'
 import { useUndo } from '@/hooks/use-undo'
@@ -11,6 +10,7 @@ import { formatLocalDatetime } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { LocationField } from '@/components/shared/location-field'
 import {
   Select,
   SelectContent,
@@ -27,6 +27,8 @@ const eventFormSchema = z.object({
   eventDate: z.string().min(1, 'La date est requise'),
   description: z.string().optional(),
   location: z.string().optional(),
+  locationLat: z.number().optional(),
+  locationLng: z.number().optional(),
 })
 
 type EventFormValues = z.infer<typeof eventFormSchema>
@@ -41,7 +43,6 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
   const isEditing = Boolean(initialData)
   const { withUndo } = useUndo()
   const types = useLiveQuery(() => eventTypeRepository.getAllSorted(), [])
-  const [geoLoading, setGeoLoading] = useState(false)
 
   // Garde en mémoire le dernier titre auto-rempli pour ne pas écraser une saisie manuelle
   const autoFilledTitle = useRef<string>('')
@@ -63,6 +64,8 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           eventDate: initialData.eventDate,
           description: initialData.description ?? '',
           location: initialData.location ?? '',
+          locationLat: initialData.locationLat,
+          locationLng: initialData.locationLng,
         }
       : {
           title: '',
@@ -70,10 +73,15 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           eventDate: defaultDate,
           description: '',
           location: '',
+          locationLat: undefined,
+          locationLng: undefined,
         },
   })
 
   const currentTypeId = watch('typeId')
+  const watchedLocation = watch('location') ?? ''
+  const watchedLat = watch('locationLat')
+  const watchedLng = watch('locationLng')
 
   // Auto-remplir le titre quand un type est sélectionné
   useEffect(() => {
@@ -97,43 +105,6 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTypeId, types])
 
-  // Géolocalisation via Nominatim (OpenStreetMap)
-  const handleGeolocate = () => {
-    if (!navigator.geolocation) {
-      toast.error('Géolocalisation non disponible sur cet appareil')
-      return
-    }
-    setGeoLoading(true)
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const { latitude, longitude } = pos.coords
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-            { headers: { 'Accept-Language': 'fr' } },
-          )
-          const data = await res.json()
-          const addr = data.address ?? {}
-          const road = addr.house_number && addr.road
-            ? `${addr.house_number} ${addr.road}`
-            : addr.road
-          const city = addr.city || addr.town || addr.village || addr.county
-          const parts = [road, city].filter(Boolean)
-          const shortAddr = parts.length > 0 ? parts.join(', ') : data.display_name
-          setValue('location', shortAddr)
-        } catch {
-          setValue('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`)
-        }
-        setGeoLoading(false)
-      },
-      () => {
-        toast.error('Localisation refusée ou indisponible')
-        setGeoLoading(false)
-      },
-      { timeout: 10000 },
-    )
-  }
-
   const onSubmit = async (data: EventFormValues) => {
     try {
       const eventData = {
@@ -142,6 +113,8 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
         eventDate: data.eventDate,
         description: data.description || undefined,
         location: data.location || undefined,
+        locationLat: data.locationLat,
+        locationLng: data.locationLng,
       }
 
       if (isEditing && initialData) {
@@ -158,6 +131,8 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
               eventDate: old.eventDate,
               description: old.description,
               location: old.location,
+              locationLat: old.locationLat,
+              locationLng: old.locationLng,
             })
           },
         )
@@ -251,32 +226,20 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
         />
       </div>
 
-      {/* Localisation */}
+      {/* Localisation avec GPS */}
       <div className="space-y-2">
         <Label htmlFor="event-location">Localisation (optionnel)</Label>
-        <div className="flex gap-2">
-          <Input
-            id="event-location"
-            placeholder="Ex: Paris, Clinique Saint-Louis, En ligne…"
-            {...register('location')}
-            className="flex-1"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={handleGeolocate}
-            disabled={geoLoading}
-            aria-label="Utiliser la localisation actuelle"
-            title="Localisation actuelle"
-          >
-            {geoLoading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <MapPin size={16} />
-            )}
-          </Button>
-        </div>
+        <LocationField
+          id="event-location"
+          address={watchedLocation}
+          onAddressChange={(v) => setValue('location', v)}
+          lat={watchedLat}
+          lng={watchedLng}
+          onCoordsChange={(lat, lng) => {
+            setValue('locationLat', lat)
+            setValue('locationLng', lng)
+          }}
+        />
       </div>
 
       {/* Actions */}
