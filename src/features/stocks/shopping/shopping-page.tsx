@@ -34,22 +34,16 @@ export function ShoppingPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="text-muted-foreground">
-            Enregistrez vos courses pour mettre à jour votre stock
-          </p>
-        </div>
-        {viewMode === 'list' && (
-          <Button onClick={() => setFormOpen(true)} size="lg" className="gap-2">
-            <Plus className="size-5" />
+    <>
+      {/* CTA */}
+      {viewMode === 'list' && (
+        <div className="flex justify-center px-4">
+          <Button onClick={() => setFormOpen(true)} className="gap-2">
+            <Plus className="size-4" />
             Nouvelle course
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Content */}
       {viewMode === 'list' && (
@@ -60,16 +54,18 @@ export function ShoppingPage() {
       )}
 
       {viewMode === 'detail' && selectedDateKey && (
-        <ShoppingDetail
-          dateKey={selectedDateKey}
-          onBack={handleBack}
-        />
+        <div className="px-4">
+          <ShoppingDetail
+            dateKey={selectedDateKey}
+            onBack={handleBack}
+          />
+        </div>
       )}
 
       {/* Formulaire course — plein écran */}
       <FormModal open={formOpen} onClose={() => setFormOpen(false)} title="Nouvelle course">
         <ShoppingForm onSuccess={handleFormSuccess} onCancel={() => setFormOpen(false)} />
       </FormModal>
-    </div>
+    </>
   )
 }

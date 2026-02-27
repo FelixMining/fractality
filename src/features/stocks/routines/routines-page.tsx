@@ -77,17 +77,11 @@ export function RoutinesPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Routines</h1>
-          <p className="text-muted-foreground">
-            Gérez vos routines de consommation pour estimer vos jours de stock restants
-          </p>
-        </div>
-        <Button onClick={handleAdd} size="lg" className="gap-2">
-          <Plus className="size-5" />
+    <>
+      {/* CTA */}
+      <div className="flex justify-center px-4">
+        <Button onClick={handleAdd} className="gap-2">
+          <Plus className="size-4" />
           Créer une routine
         </Button>
       </div>
@@ -122,6 +116,6 @@ export function RoutinesPage() {
         variant="destructive"
         onConfirm={handleDeleteConfirm}
       />
-    </div>
+    </>
   )
 }

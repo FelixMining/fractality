@@ -5,9 +5,11 @@ import { RecurringForm } from './recurring-form'
 import { RecurringHistory } from './recurring-history'
 import { FilterBar } from '@/components/shared/filter-bar'
 import { FormModal } from '@/components/shared/form-modal'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { consumeCreate } from '@/lib/create-signal'
 import type { TrackingRecurring, TrackingRecurrenceType } from '@/schemas/tracking-recurring.schema'
+import { Plus } from 'lucide-react'
 
 const RECURRENCE_TYPE_LABELS: Record<TrackingRecurrenceType, string> = {
   daily: 'Quotidien',
@@ -54,6 +56,15 @@ export function RecurringPage() {
 
   return (
     <>
+      {/* CTA */}
+      <div className="flex justify-center px-4">
+        <Button onClick={handleAdd} className="gap-2">
+          <Plus className="size-4" />
+          Créer un suivi
+        </Button>
+      </div>
+
+      {/* Filtres */}
       <div className="px-4">
         <FilterBar
           activeCount={countRecurringFilters(filters)}

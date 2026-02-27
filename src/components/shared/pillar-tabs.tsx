@@ -18,7 +18,7 @@ export function PillarTabs({ tabs, color }: PillarTabsProps) {
   const cssColor = `var(--color-${color})`
 
   return (
-    <div className="flex gap-1 overflow-x-auto border-b border-border">
+    <div className="flex border-b border-border">
       {tabs.map((tab) => {
         const Icon = tab.icon
         const isActive = pathname === tab.to
@@ -28,7 +28,7 @@ export function PillarTabs({ tabs, color }: PillarTabsProps) {
             key={tab.to}
             to={tab.to}
             className={cn(
-              'flex min-h-[44px] items-center gap-2 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm transition-colors',
+              'flex flex-1 min-h-[44px] items-center justify-center gap-1.5 border-b-2 px-2 py-2.5 text-sm transition-colors',
               isActive
                 ? 'font-medium'
                 : 'border-transparent text-text-secondary hover:text-text-primary',
@@ -39,7 +39,7 @@ export function PillarTabs({ tabs, color }: PillarTabsProps) {
                 : undefined
             }
           >
-            <Icon size={16} />
+            <Icon size={15} />
             {tab.label}
           </Link>
         )

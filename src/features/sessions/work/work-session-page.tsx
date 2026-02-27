@@ -138,28 +138,20 @@ export function WorkSessionPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-4 pt-4 pb-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Sessions de Travail</h1>
-          <p className="text-muted-foreground">
-            Trackez votre temps de travail avec le chronomètre
-          </p>
+    <div className="flex flex-col gap-4 overflow-x-hidden">
+      {/* Boutons d'action — visibles uniquement en mode liste sans timer */}
+      {!showTimer && viewMode === 'list' && (
+        <div className="flex justify-center gap-3 px-4">
+          <Button onClick={handleStartTimer} className="gap-2">
+            <Timer className="size-4" />
+            Chronomètre
+          </Button>
+          <Button onClick={handleCreateNew} variant="outline" className="gap-2">
+            <Plus className="size-4" />
+            Nouvelle
+          </Button>
         </div>
-        {!showTimer && viewMode === 'list' && (
-          <div className="flex gap-2">
-            <Button onClick={handleStartTimer} size="lg" className="gap-2">
-              <Timer className="size-5" />
-              Chronomètre
-            </Button>
-            <Button onClick={handleCreateNew} size="lg" variant="outline" className="gap-2">
-              <Plus className="size-5" />
-              Nouvelle
-            </Button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Timer */}
       {showTimer && (
@@ -173,39 +165,41 @@ export function WorkSessionPage() {
 
       {/* FilterBar — visible en mode liste sans timer */}
       {viewMode === 'list' && !showTimer && (
-        <FilterBar
-          activeCount={countWorkFilters(filters)}
-          onReset={() => setFilters(EMPTY_WORK_FILTERS)}
-        >
-          <ProjectPicker
-            value={filters.projectId}
-            onChange={(id) => setFilters((f) => ({ ...f, projectId: id }))}
-            placeholder="Tous les projets"
-          />
-          <div className="space-y-2">
-            <Label className="text-xs text-muted-foreground uppercase tracking-wide">Période</Label>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-1">
-                <Label htmlFor="work-filter-from" className="text-xs">Du</Label>
-                <Input
-                  id="work-filter-from"
-                  type="date"
-                  value={filters.from}
-                  onChange={(e) => setFilters((f) => ({ ...f, from: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="work-filter-to" className="text-xs">Au</Label>
-                <Input
-                  id="work-filter-to"
-                  type="date"
-                  value={filters.to}
-                  onChange={(e) => setFilters((f) => ({ ...f, to: e.target.value }))}
-                />
+        <div className="px-4">
+          <FilterBar
+            activeCount={countWorkFilters(filters)}
+            onReset={() => setFilters(EMPTY_WORK_FILTERS)}
+          >
+            <ProjectPicker
+              value={filters.projectId}
+              onChange={(id) => setFilters((f) => ({ ...f, projectId: id }))}
+              placeholder="Tous les projets"
+            />
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground uppercase tracking-wide">Période</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label htmlFor="work-filter-from" className="text-xs">Du</Label>
+                  <Input
+                    id="work-filter-from"
+                    type="date"
+                    value={filters.from}
+                    onChange={(e) => setFilters((f) => ({ ...f, from: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="work-filter-to" className="text-xs">Au</Label>
+                  <Input
+                    id="work-filter-to"
+                    type="date"
+                    value={filters.to}
+                    onChange={(e) => setFilters((f) => ({ ...f, to: e.target.value }))}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </FilterBar>
+          </FilterBar>
+        </div>
       )}
 
       {/* Content */}
