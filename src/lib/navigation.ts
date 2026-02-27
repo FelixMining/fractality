@@ -56,7 +56,7 @@ export const pillars: Pillar[] = [
     color: 'sessions',
     subTypes: [
       { to: '/sessions/work', label: 'Travail', icon: Timer, openCreate: true },
-      { to: '/sessions/workout', label: 'Musculation', icon: Dumbbell, openCreate: true },
+      { to: '/sessions/workout/programs', label: 'Musculation', icon: Dumbbell, openCreate: true },
       { to: '/sessions/cardio', label: 'Cardio', icon: Activity, openCreate: true },
     ],
   },

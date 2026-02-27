@@ -1,16 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CardioSessionList, countCardioFilters } from './cardio-session-list'
 import type { CardioFilters } from './cardio-session-list'
 import { CardioSessionForm } from './cardio-session-form'
 import { CardioSessionDetail } from './cardio-session-detail'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { FormModal } from '@/components/shared/form-modal'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { FilterBar } from '@/components/shared/filter-bar'
 import { ProjectPicker } from '@/components/shared/project-picker'
@@ -18,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { useUndo } from '@/hooks/use-undo'
 import { cardioSessionRepository } from '@/lib/db/repositories/cardio-session.repository'
+import { consumeCreate } from '@/lib/create-signal'
 import type { CardioSession, CardioActivityType } from '@/schemas/cardio-session.schema'
 import { Plus } from 'lucide-react'
 
@@ -48,6 +43,12 @@ export function CardioSessionPage() {
   const [filters, setFilters] = useState<CardioFilters>(EMPTY_CARDIO_FILTERS)
 
   const { withUndo } = useUndo()
+
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleCreateNew()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleCreateNew = () => {
     setEditingSessionData(null)
@@ -203,28 +204,18 @@ export function CardioSessionPage() {
         />
       )}
 
-      {/* Form Sheet */}
-      <Sheet open={viewMode === 'form'} onOpenChange={(open) => !open && handleFormCancel()}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editingSessionData ? 'Modifier la session' : 'Nouvelle session cardio'}
-            </SheetTitle>
-            <SheetDescription>
-              {editingSessionData
-                ? 'Modifiez les détails de votre session cardio.'
-                : 'Importez un GPX ou saisissez manuellement.'}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6">
-            <CardioSessionForm
-              initialData={editingSessionData || undefined}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire — plein écran */}
+      <FormModal
+        open={viewMode === 'form'}
+        onClose={handleFormCancel}
+        title={editingSessionData ? 'Modifier la session' : 'Nouvelle session cardio'}
+      >
+        <CardioSessionForm
+          initialData={editingSessionData || undefined}
+          onSuccess={handleFormSuccess}
+          onCancel={handleFormCancel}
+        />
+      </FormModal>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog

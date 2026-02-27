@@ -6,13 +6,7 @@ import type { WorkFilters } from './work-session-list'
 import { WorkSessionForm } from './work-session-form'
 import { WorkSessionDetail } from './work-session-detail'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+import { FormModal } from '@/components/shared/form-modal'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { FilterBar } from '@/components/shared/filter-bar'
 import { ProjectPicker } from '@/components/shared/project-picker'
@@ -20,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { useUndo } from '@/hooks/use-undo'
 import { workSessionRepository } from '@/lib/db/repositories/work-session.repository'
+import { consumeCreate } from '@/lib/create-signal'
 import type { WorkSession } from '@/schemas/work-session.schema'
 import { Timer, Plus } from 'lucide-react'
 
@@ -59,6 +54,12 @@ export function WorkSessionPage() {
     }
   }, [activeWorkSession])
 
+  // Ouvrir le formulaire de création si signalé par le bouton +
+  useEffect(() => {
+    if (consumeCreate()) handleCreateNew()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleStartTimer = () => {
     setShowTimer(true)
   }
@@ -76,6 +77,7 @@ export function WorkSessionPage() {
   const handleCreateNew = () => {
     setSessionFormDuration(undefined)
     setEditingSessionId(null)
+    setEditingSessionData(null)
     setFormMode('manual')
     setViewMode('form')
   }
@@ -226,30 +228,20 @@ export function WorkSessionPage() {
         />
       )}
 
-      {/* Form Sheet */}
-      <Sheet open={viewMode === 'form'} onOpenChange={(open) => !open && handleFormCancel()}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editingSessionId ? 'Modifier la session' : 'Nouvelle session'}
-            </SheetTitle>
-            <SheetDescription>
-              {editingSessionId
-                ? 'Modifiez les détails de votre session de travail.'
-                : 'Enregistrez les détails de votre session de travail.'}
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-6">
-            <WorkSessionForm
-              mode={formMode}
-              initialDuration={sessionFormDuration}
-              initialData={editingSessionData ?? undefined}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Formulaire — plein écran */}
+      <FormModal
+        open={viewMode === 'form'}
+        onClose={handleFormCancel}
+        title={editingSessionId ? 'Modifier la session' : 'Nouvelle session de travail'}
+      >
+        <WorkSessionForm
+          mode={formMode}
+          initialDuration={sessionFormDuration}
+          initialData={editingSessionData ?? undefined}
+          onSuccess={handleFormSuccess}
+          onCancel={handleFormCancel}
+        />
+      </FormModal>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
