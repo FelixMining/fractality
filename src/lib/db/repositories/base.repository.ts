@@ -85,8 +85,7 @@ export class BaseRepository<T extends BaseEntity> {
       deletedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     } as unknown as T
-    const validated = this.schema.parse(updated) as T
-    await this.writeAndSync(validated, 'delete')
+    await this.writeAndSync(updated, 'delete')
   }
 
   async restore(id: string): Promise<void> {
@@ -99,8 +98,7 @@ export class BaseRepository<T extends BaseEntity> {
       deletedAt: null,
       updatedAt: new Date().toISOString(),
     } as unknown as T
-    const validated = this.schema.parse(updated) as T
-    await this.writeAndSync(validated, 'update')
+    await this.writeAndSync(updated, 'update')
   }
 
   async getDeleted(): Promise<T[]> {

@@ -64,21 +64,23 @@ export function JournalPage() {
           />
           <div className="space-y-2">
             <Label className="text-xs text-muted-foreground uppercase tracking-wide">Période</Label>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-1">
+            <div className="flex gap-2">
+              <div className="flex-1 min-w-0 space-y-1">
                 <Label htmlFor="journal-filter-from" className="text-xs">Du</Label>
                 <Input
                   id="journal-filter-from"
                   type="date"
+                  className="w-full"
                   value={filters.from}
                   onChange={(e) => setFilters((f) => ({ ...f, from: e.target.value }))}
                 />
               </div>
-              <div className="space-y-1">
+              <div className="flex-1 min-w-0 space-y-1">
                 <Label htmlFor="journal-filter-to" className="text-xs">Au</Label>
                 <Input
                   id="journal-filter-to"
                   type="date"
+                  className="w-full"
                   value={filters.to}
                   onChange={(e) => setFilters((f) => ({ ...f, to: e.target.value }))}
                 />
