@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { WorkTimer } from './work-timer'
+import { useState, useEffect } from 'react'
+import { WorkTimer, loadTimerState } from './work-timer'
 import { WorkSessionList, countWorkFilters } from './work-session-list'
 import type { WorkFilters } from './work-session-list'
 import { WorkSessionForm } from './work-session-form'
@@ -44,6 +44,13 @@ export function WorkSessionPage() {
   const [deletingSessionId, setDeletingSessionId] = useState<string | null>(null)
 
   const { withUndo } = useUndo()
+
+  // Restaurer le timer si une session était en cours avant fermeture
+  useEffect(() => {
+    if (loadTimerState()) {
+      setShowTimer(true)
+    }
+  }, [])
 
   const handleStartTimer = () => {
     setShowTimer(true)
